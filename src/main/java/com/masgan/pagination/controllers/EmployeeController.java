@@ -89,7 +89,7 @@ public class EmployeeController {
 		return "index";
 	}
 
-	// belum, masih salah
+	
 	@GetMapping("/search/page/{pageNo}")
 	public String searchEmployee(
 		@PathVariable (value = "pageNo") int pageNo,

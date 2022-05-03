@@ -7,7 +7,9 @@ import com.masgan.pagination.entities.Post;
 import com.masgan.pagination.services.PostService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,7 +28,8 @@ public class PostAPIController {
 
     @GetMapping(value="")
     public List<Post> getPosts(){
-        return postService.getPosts();
+        // return postService.getPosts();
+        return findPaginated(1, "postTitle", "asc");
     }
 
     @GetMapping(value="/view/{id}")
@@ -36,6 +39,58 @@ public class PostAPIController {
             throw new RuntimeException("Post with id : "+id+" not found");
         }
         return post.get();
+    }
+
+    @GetMapping("/page/{pageNo}")
+    public List<Post> findPaginated(
+        // define uri variable like id, or pageNo
+        @PathVariable(value = "pageNo") int pageNo,
+
+        // define request parameter like ?sortField=postTitle&sortDir=asc
+        @RequestParam(value = "sortField") String sortField,
+        @RequestParam(value = "sortDir") String sortDirection
+    ){
+        int pageSize = 5;
+        Page<Post> page = postService.findPaginated(pageNo, pageSize, sortField, sortDirection);
+        List<Post> listPost = page.getContent();
+        int totalPages = page.getTotalPages();
+        long totalTotalElements = page.getTotalElements();
+        int numberOfElements = page.getNumberOfElements();
+        int size = page.getSize();
+
+        System.out.println("page : " + pageNo );
+        System.out.println("sortField : " + sortField );
+        System.out.println("sortDirection : " + sortDirection );
+        System.out.println("totalPages : " + totalPages );
+        System.out.println("totalTotalElements : " + totalTotalElements );
+        System.out.println("numberOfElements : " + numberOfElements );
+        System.out.println("size : " + size );
+
+        return listPost;
+
+    }
+
+    @GetMapping("/search/page/{pageNo}")
+    public List<Post> searchPost(
+        @PathVariable(value = "pageNo") int pageNo,
+        @RequestParam(value = "keyword") String keyword,
+        @RequestParam(value = "sortField") String sortField,
+        @RequestParam(value = "sortDir") String sortDir
+    ){
+        int pageSize = 5;
+
+        if(sortField == null){
+			sortField = "firstName";
+		}
+		if(sortDir == null){
+			sortDir = "asc";
+		}
+
+        Page<Post> page = postService.findPaginatedSearching(keyword, pageNo, pageSize, sortField, sortDir);
+        List<Post> listPosts = page.getContent();
+
+        return listPosts;
+
     }
 
     @PostMapping(value="")

@@ -50,8 +50,8 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Page<Employee> findPaginated(int pageNo, int pageSize, String sortField, String sortDirection) {
         // for sorting
         Sort sort = sortDirection.equalsIgnoreCase(Sort.Direction.ASC.name()) ? 
-        Sort.by(sortField).ascending() :
-        Sort.by(sortField).descending();
+                    Sort.by(sortField).ascending() :
+                    Sort.by(sortField).descending();
         
         // for pagination
         Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
