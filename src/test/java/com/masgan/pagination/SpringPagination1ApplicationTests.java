@@ -8,6 +8,7 @@ class SpringPagination1ApplicationTests {
 
 	@Test
 	void contextLoads() {
+		System.out.println("ini test");
 	}
 
 }
