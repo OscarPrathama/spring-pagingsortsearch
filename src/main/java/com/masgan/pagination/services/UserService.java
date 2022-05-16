@@ -1,6 +1,7 @@
 package com.masgan.pagination.services;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.masgan.pagination.entities.User;
 import com.masgan.pagination.repositories.UserRepository;
@@ -21,5 +22,10 @@ public class UserService {
     public void save(User user){
         userRepo.save(user);
     }
+
+    public Optional<User> getUser(long id) {
+        return userRepo.findById(id);
+    }
+
 
 }

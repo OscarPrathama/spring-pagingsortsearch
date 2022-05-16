@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.masgan.pagination.entities.Post;
+import com.masgan.pagination.entities.User;
 import com.masgan.pagination.services.PostService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,15 @@ public class PostAPIController {
             throw new RuntimeException("Post with id : "+id+" not found");
         }
         return post.get();
+    }
+
+    @GetMapping(value = "/view/{id}/user")
+    public User getPostUser(@PathVariable("id") Long id){
+        Optional<Post> post = postService.getPost(id);
+        if(!post.isPresent()){
+            throw new RuntimeException("Post with id : " + id + " not found");
+        }
+        return post.get().getUser();
     }
 
     @GetMapping("/page/{pageNo}")
