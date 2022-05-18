@@ -34,9 +34,13 @@ public class PostAPIController {
     @Autowired
     UserService userService;
 
+    @GetMapping(value = "/all")
+    public List<Post> getPostsWithoutPaging(){
+        return postService.getPosts();
+    }
+
     @GetMapping(value="")
     public List<Post> getPosts(){
-        // return postService.getPosts();
         return findPaginated(1, "postTitle", "asc");
     }
 
@@ -112,8 +116,15 @@ public class PostAPIController {
 
     @PostMapping(value="")
     public String store(@RequestBody Post post){
+        
+        // set post string
         String setPostSlug = slug.slugify(post.getPostTitle());
         post.setPostSlug( setPostSlug );
+
+        // set post user
+        User user = getUser(1);
+        post.setUser(user);
+
         postService.save(post);
 
         return "Saved...";
@@ -140,6 +151,14 @@ public class PostAPIController {
         postService.delete(id);
 
         return "Post with id "+id+" deleted";
+    }
+
+    public User getUser(long id){
+        Optional<User> user = userService.getUser(id);
+        if(!user.isPresent()){
+            throw new RuntimeException("User with id "+id+" not found");
+        }
+        return user.get();
     }
 
 }
