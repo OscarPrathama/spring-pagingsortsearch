@@ -3,9 +3,11 @@ package com.masgan.pagination.controllers;
 import java.util.List;
 import java.util.Optional;
 
+import com.github.slugify.Slugify;
 import com.masgan.pagination.entities.Post;
 import com.masgan.pagination.entities.User;
 import com.masgan.pagination.services.PostService;
+import com.masgan.pagination.services.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,8 +26,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequestMapping("/api/v1/posts")
 public class PostAPIController {
     
+    Slugify slug = new Slugify();
+
     @Autowired
     PostService postService;
+
+    @Autowired
+    UserService userService;
 
     @GetMapping(value="")
     public List<Post> getPosts(){
@@ -105,6 +112,8 @@ public class PostAPIController {
 
     @PostMapping(value="")
     public String store(@RequestBody Post post){
+        String setPostSlug = slug.slugify(post.getPostTitle());
+        post.setPostSlug( setPostSlug );
         postService.save(post);
 
         return "Saved...";
