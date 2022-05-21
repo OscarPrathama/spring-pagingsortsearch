@@ -168,11 +168,11 @@ public class UserAPIController {
 
     
     /**
-     * Bulk action to insert 5000 users
+     * Bulk action to insert 20000 users = 37 minutes
     */
     @PostMapping("/seedUser")
-    public void seedUser(){
-        for (int i = 0; i < 5000; i++) {
+    public void seedUsers(){
+        for (int i = 0; i < 20000; i++) {
             Faker faker = new Faker();
             User user = new User();
             Random random = new Random();

@@ -15,7 +15,7 @@ public class GlobalTest {
     public void getRandomNumberRange(){
         for (int i = 0; i < 12; i++) {
             Random random = new Random();   
-            int my_number = random.nextInt(3)+1;
+            int my_number = random.nextInt(5)+1;
             System.out.println(my_number);
         }
     }
