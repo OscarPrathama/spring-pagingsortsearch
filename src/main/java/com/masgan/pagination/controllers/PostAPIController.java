@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.slugify.Slugify;
+import com.masgan.pagination.entities.Comment;
 import com.masgan.pagination.entities.Post;
 import com.masgan.pagination.entities.User;
 import com.masgan.pagination.services.PostService;
@@ -60,6 +61,15 @@ public class PostAPIController {
             throw new RuntimeException("Post with id : " + id + " not found");
         }
         return post.get().getUser();
+    }
+
+    @GetMapping(value = "/view/{id}/comments")
+    public List<Comment> getPostComments(@PathVariable("id") Long id) {
+        Optional<Post> post = postService.getPost(id);
+        if(!post.isPresent()){
+            throw new RuntimeException("Post with id : "+id+" not found");
+        }
+        return post.get().getComments();
     }
 
     @GetMapping("/page/{pageNo}")
