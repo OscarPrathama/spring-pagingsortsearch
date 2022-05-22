@@ -108,13 +108,13 @@ public class PostAPIController {
         @RequestParam(value = "sortField") String sortField,
         @RequestParam(value = "sortDir") String sortDir
     ){
-        int pageSize = 5;
+        int pageSize = 10;
 
         if(sortField == null){
-			sortField = "firstName";
+			sortField = "postTitle";
 		}
 		if(sortDir == null){
-			sortDir = "asc";
+			sortDir = "desc";
 		}
 
         Page<Post> page = postService.findPaginatedSearching(keyword, pageNo, pageSize, sortField, sortDir);

@@ -34,6 +34,22 @@ public class UserService {
         return userRepo.findAll(pageable);
     }
 
+    public Page<User> findPaginatedSearching(
+        String keyword,
+        int pageNo,
+        int pageSize,
+        String sortField,
+        String order
+    ){
+        Sort sort = order.equalsIgnoreCase(Sort.Direction.ASC.name()) ?
+                    Sort.by(sortField).ascending() : 
+                    Sort.by(sortField).descending();
+
+        Pageable pageable = PageRequest.of(pageNo - 1, pageSize, sort);
+
+        return userRepo.search(keyword, pageable);
+    }
+
     public void save(User user){
         userRepo.save(user);
     }

@@ -51,7 +51,7 @@ public class UserAPIController {
     */
     @GetMapping("/")
     public List<User> getUsers(){
-        return findPaginated(1, "createdAt", "asc");
+        return findPaginated(1, "createdAt", "desc");
     }
 
     /**
@@ -75,6 +75,36 @@ public class UserAPIController {
         // int size = page.getSize();
         
         return usersList;
+    }
+
+    /**
+     * Find searched users....
+     * 
+     * @param   pageNo
+     * @return  objet   User
+    */
+    @GetMapping(value = "/search/page/{pageNo}")
+    public List<User> searchUser(
+        @PathVariable(value = "pageNo") int pageNo,
+        @RequestParam(value = "keyword") String keyword,
+        @RequestParam(value = "sortField") String sortField,
+        @RequestParam(value = "order") String order
+    ){
+        int pageSize = 10;
+
+        if (sortField == null) {
+            sortField = "firstName";
+        }
+
+        if (order == null) {
+            order = "desc";
+        }
+
+        Page<User> page = userService.findPaginatedSearching(keyword, pageNo, pageSize, sortField, order);
+        List<User> usersList = page.getContent();
+
+        return usersList;
+
     }
 
     /**
