@@ -1,8 +1,10 @@
 package com.masgan.pagination.entities;
 
 import java.util.List;
+import java.util.Set;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,7 +12,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.Lob;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -24,13 +28,15 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @Table(name = "posts")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
@@ -45,6 +51,14 @@ public class Post {
         referencedColumnName = "id"
     )
     private User user;
+
+    @ManyToMany
+    @JoinTable(
+        name = "post_category",
+        joinColumns = @JoinColumn(name = "post_id"),
+        inverseJoinColumns = @JoinColumn(name = "category_id")
+    )
+    private Set<Category> category = new HashSet<>();
     
     @OneToMany(
         mappedBy = "post"
@@ -71,4 +85,9 @@ public class Post {
     @Column(nullable = false)
     private Date dateUpdated;
 
+    /* Additional Function */
+    public void addCategory(Category category) {
+        this.category.add(category);
+    }
+    
 }
